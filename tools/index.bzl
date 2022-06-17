@@ -1,12 +1,12 @@
 "Custom macro"
 
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
+load("@aspect_rules_js//js:defs.bzl", "js_library")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config", "ts_project")
 load("@bazelbuild_buildtools//buildifier:def.bzl", "buildifier_test")
-load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test")
-load("@build_bazel_rules_nodejs//internal/js_library:js_library.bzl", "js_library")
-load("@npm//@bazel/esbuild:index.bzl", "esbuild")
-load("@npm//@bazel/typescript:index.bzl", "ts_config", "ts_project")
-load("@npm//prettier:index.bzl", "prettier", "prettier_test")
-load("@npm//ts-node:index.bzl", "ts_node", "ts_node_test")
+load("@npm//prettier:package_json.bzl", prettier_bin = "bin")
+load("@npm//ts-node:package_json.bzl", ts_node_bin = "bin")
 
 BUILDIFIER_WARNINGS = [
     "attr-cfg",
@@ -42,14 +42,14 @@ BUILDIFIER_WARNINGS = [
     "unused-variable",
 ]
 
-def ts_compile(name, srcs, deps, package_name = None, skip_esm = True, skip_esm_esnext = True):
+def ts_compile(name, srcs, deps, package = None, skip_esm = True, skip_esm_esnext = True):
     """Compile TS with prefilled args.
 
     Args:
         name: target name
         srcs: src files
         deps: deps
-        package_name: name from package.json
+        package: name from package.json
         skip_esm: skip building ESM bundle
         skip_esm_esnext: skip building the ESM ESNext bundle
     """
@@ -102,12 +102,12 @@ def ts_compile(name, srcs, deps, package_name = None, skip_esm = True, skip_esm_
 
     js_library(
         name = name,
-        package_name = package_name,
+        # package = package,
         deps = [":%s-base" % name] + ([":%s-esm" % name] if not skip_esm else []),
         visibility = ["//visibility:public"],
     )
 
-def ts_script(name, entry_point, args = [], data = [], outs = None, output_dir = False, visibility = None):
+def ts_script(name, entry_point, args = [], data = [], outs = [], output_dir = False, visibility = None):
     """Execute a TS script
 
     Args:
@@ -129,11 +129,11 @@ def ts_script(name, entry_point, args = [], data = [], outs = None, output_dir =
     else:
         all_args += ["--out", "$@"]
     all_args += args
-    ts_node(
+    ts_node_bin.ts_node(
         name = name,
         outs = outs,
         args = all_args,
-        data = data + [
+        srcs = data + [
             entry_point,
             "//:tsconfig.json",
             "@npm//@types/fs-extra",
@@ -168,10 +168,12 @@ def generate_src_file(name, entry_point, src, args = [], data = [], visibility =
         visibility = visibility,
     )
 
-    generated_file_test(
+    files = {}
+    files[src] = tmp_filename
+
+    write_source_files(
         name = name,
-        src = src,
-        generated = tmp_filename,
+        files = files,
         visibility = visibility,
     )
 
@@ -249,13 +251,13 @@ def check_format(name, srcs, config = "//:.prettierrc.json"):
         verbose = True,
     )
 
-    prettier_test(
+    prettier_bin.prettier_test(
         name = "%s_prettier_test" % name,
         data = [
             "%s_prettier_srcs" % name,
             config,
         ],
-        templated_args = [
+        args = [
             "--config",
             "$(rootpath %s)" % config,
             "--loglevel",
@@ -265,13 +267,13 @@ def check_format(name, srcs, config = "//:.prettierrc.json"):
         ],
     )
 
-    prettier(
+    prettier_bin.prettier(
         name = name,
-        data = [
+        srcs = [
             "%s_prettier_srcs" % name,
             config,
         ],
-        templated_args = [
+        args = [
             "--config",
             "$(rootpath %s)" % config,
             "--loglevel",
@@ -287,7 +289,7 @@ def check_format(name, srcs, config = "//:.prettierrc.json"):
 def package_json_test(name, packageJson = "package.json", deps = []):
     external_deps = [s.replace("@npm//", "") for s in deps if s.startswith("@npm//")]
     internal_dep_package_jsons = ["%s:package.json" % s.split(":")[0] for s in deps if not s.startswith("@npm//")]
-    ts_node_test(
+    ts_node_bin.ts_node_test(
         name = name,
         args = [
                    "--transpile-only",

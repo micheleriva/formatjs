@@ -1,7 +1,7 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
-load("@npm//@bazel/esbuild:index.bzl", "esbuild")
-load("@npm//@bazel/typescript:index.bzl", "ts_project")
-load("@npm//http-server:index.bzl", "http_server")
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
+load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@npm//http-server:package_json.bzl", "bin")
 load("//tools:index.bzl", "check_format")
 
 SRC_DEPS = [
@@ -59,13 +59,13 @@ copy_to_bin(
     srcs = ["index.html"],
 )
 
-http_server(
+bin.http_server(
     name = "examples",
-    data = [
+    srcs = [
         ":index",
         ":main",
     ],
-    templated_args = [
+    args = [
         "packages/react-intl/examples",
     ],
 )

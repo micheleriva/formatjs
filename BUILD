@@ -1,19 +1,20 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
 load("@bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
 load("@com_github_ash2k_bazel_tools//multirun:def.bzl", "multirun")
 load("@io_bazel_rules_docker//container:container.bzl", "container_image", "container_layer")
 load("@io_bazel_rules_docker//docker/package_managers:download_pkgs.bzl", "download_pkgs")
 load("@io_bazel_rules_docker//docker/package_managers:install_pkgs.bzl", "install_pkgs")
 load("@io_bazel_rules_docker//docker/util:run.bzl", "container_run_and_extract")
-load("@npm//@bazel/typescript:index.bzl", "ts_config")
-load("@npm//karma:index.bzl", "karma_test")
-load("@npm//lerna:index.bzl", "lerna")
+load("@npm//karma:package_json.bzl", karma_bin = "bin")
+load("@npm//lerna:package_json.bzl", lerna_bin = "bin")
 load("//:index.bzl", "ZONES")
 load("//tools:index.bzl", "BUILDIFIER_WARNINGS")
+load("@npm//:defs.bzl", "npm_link_all_packages")
 
 # Allow any ts_library rules in this workspace to reference the config
 # Note: if you move the tsconfig.json file to a subdirectory, you can add an alias() here instead
 #   so that ts_library rules still use it by default.
-#   See https://www.npmjs.com/package/@bazel/typescript#installation
+#   See https://www.npmjs.com/package/@aspect_rules_ts#installation
 exports_files(
     [
         "tsconfig.json",
@@ -28,6 +29,10 @@ exports_files(
     ] + glob(["npm_package_patches/*"]),
     visibility = ["//:__subpackages__"],
 )
+
+# Link all direct dependencies in /examples/npm_deps/package.json to
+# bazel-bin/examples/npm_deps/node_modules
+npm_link_all_packages(name = "node_modules")
 
 ts_config(
     name = "tsconfig.esm",
@@ -55,12 +60,12 @@ KARMA_TESTS = [
     "//packages/intl-relativetimeformat:bundled-karma-tests",
 ]
 
-karma_test(
+karma_bin.karma_test(
     name = "karma",
-    configuration_env_vars = [
-        "SAUCE_USERNAME",
-        "SAUCE_ACCESS_KEY",
-    ],
+    # configuration_env_vars = [
+    #     "SAUCE_USERNAME",
+    #     "SAUCE_ACCESS_KEY",
+    # ],
     data = [
         "//:karma.conf.js",
         "@npm//karma-jasmine",
@@ -69,21 +74,21 @@ karma_test(
         "@npm//karma-jasmine-matchers",
     ] + KARMA_TESTS,
     tags = ["manual"],
-    templated_args = [
+    args = [
         "start",
         "$(rootpath //:karma.conf.js)",
         "--no-single-run",
     ],
 )
 
-karma_test(
+karma_bin.karma_test(
     name = "karma-ci",
     size = "large",
-    configuration_env_vars = [
-        "SAUCE_USERNAME",
-        "SAUCE_ACCESS_KEY",
-        "GITHUB_RUN_ID",
-    ],
+    # configuration_env_vars = [
+    #     "SAUCE_USERNAME",
+    #     "SAUCE_ACCESS_KEY",
+    #     "GITHUB_RUN_ID",
+    # ],
     data = [
         "//:karma.conf.js",
         "@npm//karma-jasmine",
@@ -92,7 +97,7 @@ karma_test(
         "@npm//karma-jasmine-matchers",
     ] + KARMA_TESTS,
     tags = ["manual"],
-    templated_args = [
+    args = [
         "start",
         "$(rootpath //:karma.conf.js)",
         "--browsers",
@@ -175,9 +180,9 @@ buildifier(
     verbose = True,
 )
 
-lerna(
+lerna_bin.lerna(
     name = "version",
-    templated_args = [
+    args = [
         "version",
         "prerelease",
         "--yes",

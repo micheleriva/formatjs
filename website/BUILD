@@ -1,6 +1,6 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
-load("@npm//@docusaurus/core:index.bzl", "docusaurus")
-load("@npm//http-server:index.bzl", "http_server")
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
+load("@npm//@docusaurus/core:package_json.bzl", docusaurus_bin = "bin")
+load("@npm//http-server:package_json.bzl", http_server_bin = "bin")
 load("//tools:index.bzl", "check_format")
 
 check_format(
@@ -47,7 +47,7 @@ copy_to_bin(
     ]),
 )
 
-docusaurus(
+docusaurus_bin.docusaurus(
     name = "build",
     args = [
         "build",
@@ -55,23 +55,23 @@ docusaurus(
         "$(@D)",
         "$(BINDIR)/website",
     ],
-    data = DEPS,
+    srcs = DEPS,
     output_dir = True,
 )
 
-docusaurus(
+docusaurus_bin.docusaurus(
     name = "deploy",
-    configuration_env_vars = [
-        "USE_SSH",
-        "GIT_USER",
-        "DEPLOYMENT_BRANCH",
-        "NO_UPDATE_NOTIFIER",
-    ],
-    data = DEPS + [
+    # configuration_env_vars = [
+    #     "USE_SSH",
+    #     "GIT_USER",
+    #     "DEPLOYMENT_BRANCH",
+    #     "NO_UPDATE_NOTIFIER",
+    # ],
+    srcs = DEPS + [
         ":build",
         "docusaurus.config.js",
     ],
-    templated_args = [
+    args = [
         "deploy",
         "--skip-build",
         "--out-dir",
@@ -80,12 +80,12 @@ docusaurus(
     ],
 )
 
-http_server(
+http_server_bin.http_server(
     name = "serve",
-    data = [
+    srcs = [
         ":build",
     ],
-    templated_args = [
+    args = [
         "$$(rlocation $(location :build))",
     ],
 )

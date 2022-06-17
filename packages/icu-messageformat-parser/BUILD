@@ -1,21 +1,21 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test", "nodejs_binary", "pkg_npm")
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("//tools:index.bzl", "bundle_karma_tests", "check_format", "generate_src_file", "package_json_test", "ts_compile")
 load("//tools:jest.bzl", "jest_test")
+load("@aspect_rules_js//npm/private:npm_package.bzl", "npm_package")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
 
-exports_files(["package.json"])
+exports_files(["package.json", "tsconfig.json"])
 
 PACKAGE_NAME = "icu-messageformat-parser"
 
-pkg_npm(
+npm_package(
     name = PACKAGE_NAME,
-    package_name = "@formatjs/%s" % PACKAGE_NAME,
+    package = "@formatjs/%s" % PACKAGE_NAME,
     srcs = [
         "LICENSE.md",
         "README.md",
         "package.json",
-    ],
-    deps = [
-        ":dist",
+        ":dist"
     ],
 )
 
@@ -38,7 +38,7 @@ SRC_DEPS = [
 
 ts_compile(
     name = "dist",
-    package_name = "@formatjs/%s" % PACKAGE_NAME,
+    package = "@formatjs/%s" % PACKAGE_NAME,
     srcs = SRCS,
     skip_esm = False,
     deps = SRC_DEPS,
@@ -57,7 +57,7 @@ jest_test(
     ] + SRC_DEPS,
 )
 
-nodejs_binary(
+js_binary(
     name = "benchmark",
     data = [
         ":dist",
@@ -67,10 +67,9 @@ nodejs_binary(
     entry_point = "benchmark.js",
 )
 
-generated_file_test(
+write_source_files(
     name = "tsconfig_json",
-    src = "tsconfig.json",
-    generated = "//tools:tsconfig.golden.json",
+    files = {"tsconfig.json": "//tools:tsconfig.golden.json"},
 )
 
 check_format(

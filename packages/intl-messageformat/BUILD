@@ -1,22 +1,21 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test", "pkg_npm")
-load("@npm//@bazel/esbuild:index.bzl", "esbuild")
-load("@npm//ts-node:index.bzl", "ts_node")
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
+load("@aspect_rules_js//npm/private:npm_package.bzl", "npm_package")
+load("@npm//ts-node:package_json.bzl", ts_node_bin = "bin")
 load("//tools:index.bzl", "check_format", "package_json_test", "ts_compile")
 load("//tools:jest.bzl", "jest_test")
 
-exports_files(["package.json"])
+exports_files(["package.json", "tsconfig.json"])
 
 PACKAGE_NAME = "intl-messageformat"
 
-pkg_npm(
+npm_package(
     name = PACKAGE_NAME,
-    package_name = PACKAGE_NAME,
+    package = PACKAGE_NAME,
     srcs = [
         "LICENSE.md",
         "README.md",
         "package.json",
-    ],
-    deps = [
         "%s.esm.js" % PACKAGE_NAME,
         "%s.iife.js" % PACKAGE_NAME,
         ":dist",
@@ -51,7 +50,7 @@ TEST_DEPS = SRC_DEPS + [
 
 ts_compile(
     name = "dist",
-    package_name = PACKAGE_NAME,
+    package = PACKAGE_NAME,
     srcs = SRCS,
     skip_esm = False,
     skip_esm_esnext = False,
@@ -70,7 +69,7 @@ jest_test(
 
 esbuild(
     name = "%s.iife" % PACKAGE_NAME,
-    args = {
+    config = {
         "globalName": "IntlMessageFormat",
     },
     entry_point = "lib/index.js",
@@ -82,7 +81,7 @@ esbuild(
 
 esbuild(
     name = "%s.esm" % PACKAGE_NAME,
-    args = {
+    config = {
         "globalName": "IntlMessageFormat",
     },
     entry_point = "lib_esnext/index.js",
@@ -93,10 +92,9 @@ esbuild(
     ] + SRC_DEPS,
 )
 
-generated_file_test(
+write_source_files(
     name = "tsconfig_json",
-    src = "tsconfig.json",
-    generated = "//tools:tsconfig.golden.json",
+    files = {"tsconfig.json": "//tools:tsconfig.golden.json"},
 )
 
 check_format(
@@ -111,13 +109,13 @@ check_format(
     ),
 )
 
-ts_node(
+ts_node_bin.ts_node(
     name = "benchmark",
     args = [
         "--transpile-only",
         "$(execpath tests/benchmark.ts)",
     ],
-    data = SRCS + SRC_DEPS + [
+    srcs = SRCS + SRC_DEPS + [
         "tests/benchmark.ts",
         "//:tsconfig.json",
         "@npm//tslib",

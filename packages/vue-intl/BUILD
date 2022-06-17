@@ -1,20 +1,19 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm")
+load("@aspect_rules_js//npm/private:npm_package.bzl", "npm_package")
 load("//tools:index.bzl", "check_format", "package_json_test", "ts_compile")
 load("//tools:jest.bzl", "jest_test")
 
-exports_files(["package.json"])
+exports_files(["package.json", "tsconfig.json"])
 
 PACKAGE_NAME = "vue-intl"
 
-pkg_npm(
+npm_package(
     name = PACKAGE_NAME,
-    package_name = PACKAGE_NAME,
+    package = PACKAGE_NAME,
     srcs = [
         "LICENSE.md",
         "README.md",
         "package.json",
-    ],
-    deps = [":dist"],
+    ":dist"],
 )
 
 alias(
@@ -39,7 +38,7 @@ SRC_DEPS = [
 
 ts_compile(
     name = "dist",
-    package_name = PACKAGE_NAME,
+    package = PACKAGE_NAME,
     srcs = SRCS,
     deps = SRC_DEPS,
 )

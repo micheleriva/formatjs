@@ -1,21 +1,20 @@
-# load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "generated_file_test", "pkg_npm")
+# load("@aspect_rules_js//npm/private:npm_package.bzl", "npm_package")
+# load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 
 # # load("//tools:jest.bzl", "jest_test")
-# load("@npm//http-server:index.bzl", "http_server")
+# load("@npm//http-server:package_json.bzl", "http_server")
 load("//tools:index.bzl", "check_format")
 
-# exports_files(["package.json"])
+# exports_files(["package.json", "tsconfig.json"])
 
 # PACKAGE_NAME = "editor"
 
-# pkg_npm(
+# npm_package(
 #     name = PACKAGE_NAME,
-#     package_name = "@formatjs/%s" % PACKAGE_NAME,
+#     package = "@formatjs/%s" % PACKAGE_NAME,
 #     srcs = [
 #         "LICENSE.md",
 #         "README.md",
-#     ],
-#     deps = [
 #         ":dist",
 #         ":dist-esm",
 #     ],
@@ -47,7 +46,7 @@ load("//tools:index.bzl", "check_format")
 
 # ts_compile(
 #     name = "dist",
-#     package_name = "@formatjs/%s" % PACKAGE_NAME,
+#     package = "@formatjs/%s" % PACKAGE_NAME,
 #     srcs = SRCS,
 #     skip_esm = False,
 #     deps = SRC_DEPS,
@@ -68,12 +67,6 @@ load("//tools:index.bzl", "check_format")
 # #         "@npm//@types/rimraf",
 # #     ] + SRC_DEPS,
 # # )
-
-# generated_file_test(
-#     name = "tsconfig_json",
-#     src = "tsconfig.json",
-#     generated = "//tools:tsconfig.golden.json",
-# )
 
 check_format(
     name = "prettier",
@@ -109,7 +102,7 @@ check_format(
 #         ":index",
 #         ":app",
 #     ] + glob(["fixtures/*.json"]),
-#     templated_args = [
+#     args = [
 #         "packages/editor",
 #     ],
 # )

@@ -1,12 +1,13 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test", "pkg_npm")
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
+load("@aspect_rules_js//npm/private:npm_package.bzl", "npm_package")
 load("@com_github_ash2k_bazel_tools//multirun:def.bzl", "multirun")
-load("@npm//@bazel/esbuild:index.bzl", "esbuild")
-load("@npm//ts-node:index.bzl", "ts_node")
+load("@npm//ts-node:package_json.bzl", ts_node_bin = "bin")
 load("//:index.bzl", "ZONES")
 load("//tools:index.bzl", "check_format", "generate_src_file", "package_json_test", "ts_compile", "ts_script")
 load("//tools:jest.bzl", "jest_test")
 
-exports_files(["package.json"])
+exports_files(["package.json", "tsconfig.json"])
 
 PACKAGE_NAME = "intl-datetimeformat"
 
@@ -24,15 +25,13 @@ TEST_LOCALES = [
 
 TEST_LOCALE_DATA = ["tests/locale-data/%s.json" % locale for locale in TEST_LOCALES]
 
-pkg_npm(
+npm_package(
     name = PACKAGE_NAME,
-    package_name = "@formatjs/%s" % PACKAGE_NAME,
+    package = "@formatjs/%s" % PACKAGE_NAME,
     srcs = [
         "LICENSE.md",
         "README.md",
         "package.json",
-    ],
-    deps = [
         "add-all-tz.js",
         "add-all-tz.d.ts",
         "add-golden-tz.js",
@@ -82,7 +81,7 @@ TEST_DEPS = SRC_DEPS + [
 
 ts_compile(
     name = "dist",
-    package_name = "@formatjs/%s" % PACKAGE_NAME,
+    package = "@formatjs/%s" % PACKAGE_NAME,
     srcs = SRCS,
     skip_esm = False,
     deps = SRC_DEPS,
@@ -294,10 +293,9 @@ genrule(
     cmd = "echo 'export {}' > $@",
 )
 
-generated_file_test(
+write_source_files(
     name = "tsconfig_json",
-    src = "tsconfig.json",
-    generated = "//tools:tsconfig.golden.json",
+    files = {"tsconfig.json": "//tools:tsconfig.golden.json"},
 )
 
 esbuild(
@@ -327,13 +325,13 @@ check_format(
     ),
 )
 
-ts_node(
+ts_node_bin.ts_node(
     name = "benchmark",
     args = [
         "--transpile-only",
         "$(execpath tests/benchmark.ts)",
     ],
-    data = SRCS + SRC_DEPS + [
+    srcs = SRCS + SRC_DEPS + [
         "tests/benchmark.ts",
         "tests/locale-data/en.json",
         "//:tsconfig.json",

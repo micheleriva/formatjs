@@ -1,20 +1,19 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test", "pkg_npm")
-load("@npm//@bazel/esbuild:index.bzl", "esbuild")
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
+load("@aspect_rules_js//npm/private:npm_package.bzl", "npm_package")
 load("//tools:index.bzl", "check_format", "ts_compile")
 load("//tools:jest.bzl", "jest_test")
 
 PACKAGE_NAME = "cli"
 
-exports_files(["package.json"])
+exports_files(["package.json", "tsconfig.json"])
 
-pkg_npm(
+npm_package(
     name = PACKAGE_NAME,
-    package_name = "@formatjs/%s" % PACKAGE_NAME,
+    package = "@formatjs/%s" % PACKAGE_NAME,
     srcs = [
         "LICENSE.md",
         "README.md",
-    ],
-    deps = [
         ":bin/formatjs",
         ":dist",
     ],
@@ -59,7 +58,7 @@ SRC_DEPS = [
 
 ts_compile(
     name = "dist",
-    package_name = "@formatjs/%s" % PACKAGE_NAME,
+    package = "@formatjs/%s" % PACKAGE_NAME,
     srcs = SRCS,
     skip_esm_esnext = False,
     deps = SRC_DEPS,
@@ -156,17 +155,10 @@ jest_test(
     deps = VUE_DEPS,
 )
 
-generated_file_test(
+write_source_files(
     name = "tsconfig_json",
-    src = "tsconfig.json",
-    generated = "//tools:tsconfig.golden.json",
+    files = {"tsconfig.json": "//tools:tsconfig.golden.json"},
 )
-
-# generated_file_test(
-#     name = "integration_test",
-#     src = "tsconfig.json",
-#     generated = "//tools:tsconfig.golden.json",
-# )
 
 check_format(
     name = "prettier",

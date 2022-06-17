@@ -1,12 +1,13 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test", "pkg_npm")
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@aspect_rules_js//npm/private:npm_package.bzl", "npm_package")
 load("@com_github_ash2k_bazel_tools//multirun:def.bzl", "multirun")
-load("@npm//@bazel/esbuild:index.bzl", "esbuild")
-load("@npm//@bazel/typescript:index.bzl", "ts_project")
-load("@npm//test262-harness:index.bzl", "test262_harness_test")
+load("@npm//test262-harness:package_json.bzl", test262_harness_bin = "bin")
 load("//tools:index.bzl", "check_format", "generate_src_file", "package_json_test", "ts_compile", "ts_script")
 load("//tools:jest.bzl", "jest_test")
 
-exports_files(["package.json"])
+exports_files(["package.json", "tsconfig.json"])
 
 PACKAGE_NAME = "intl-numberformat"
 
@@ -43,15 +44,13 @@ TEST_LOCALES = [
 
 TEST_LOCALE_DATA = ["tests/locale-data/%s.json" % locale for locale in TEST_LOCALES]
 
-pkg_npm(
+npm_package(
     name = PACKAGE_NAME,
-    package_name = "@formatjs/%s" % PACKAGE_NAME,
+    package = "@formatjs/%s" % PACKAGE_NAME,
     srcs = [
         "LICENSE.md",
         "README.md",
         "package.json",
-    ],
-    deps = [
         ":dist",
         ":locale-data",
         # polyfill-library uses this
@@ -99,7 +98,7 @@ TEST_DEPS = SRC_DEPS + [
 
 ts_compile(
     name = "dist",
-    package_name = "@formatjs/%s" % PACKAGE_NAME,
+    package = "@formatjs/%s" % PACKAGE_NAME,
     srcs = SRCS,
     skip_esm = False,
     deps = SRC_DEPS,
@@ -281,7 +280,7 @@ esbuild(
     ] + SRC_DEPS,
 )
 
-test262_harness_test(
+test262_harness_bin.test262_harness_test(
     name = "test262",
     size = "large",
     data = [
@@ -289,7 +288,7 @@ test262_harness_test(
         "@com_github_tc39_test262//:test262-harness",
         "@com_github_tc39_test262//:test262-numberformat",
     ],
-    templated_args = [
+    args = [
         "--reporter-keys",
         "file,attrs,result",
         "--timeout",
@@ -302,10 +301,9 @@ test262_harness_test(
     ],
 )
 
-generated_file_test(
+write_source_files(
     name = "tsconfig_json",
-    src = "tsconfig.json",
-    generated = "//tools:tsconfig.golden.json",
+    files = {"tsconfig.json": "//tools:tsconfig.golden.json"},
 )
 
 esbuild(

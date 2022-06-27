@@ -3,7 +3,7 @@
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
 load("@aspect_rules_js//js:defs.bzl", "js_library")
-load("@aspect_rules_ts//ts:defs.bzl", "ts_config", "ts_project")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@bazelbuild_buildtools//buildifier:def.bzl", "buildifier_test")
 load("@npm//prettier:package_json.bzl", prettier_bin = "bin")
 load("@npm//ts-node:package_json.bzl", ts_node_bin = "bin")
@@ -53,18 +53,13 @@ def ts_compile(name, srcs, deps, package = None, skip_esm = True, skip_esm_esnex
         skip_esm: skip building ESM bundle
         skip_esm_esnext: skip building the ESM ESNext bundle
     """
-    deps = deps + ["@npm//tslib"]
-    ts_config(
-        name = "%s-tsconfig" % name,
-        src = "tsconfig.json",
-        deps = ["//:tsconfig.json"],
-    )
+    deps = deps + ["//:node_modules/tslib"]
     ts_project(
         name = "%s-base" % name,
         srcs = srcs,
         declaration = True,
         declaration_map = True,
-        tsconfig = ":%s-tsconfig" % name,
+        tsconfig = "//:tsconfig",
         resolve_json_module = True,
         deps = deps,
     )
@@ -76,7 +71,6 @@ def ts_compile(name, srcs, deps, package = None, skip_esm = True, skip_esm_esnex
             declaration_map = True,
             out_dir = "lib",
             tsconfig = "//:tsconfig.esm",
-            extends = "//:tsconfig.json",
             resolve_json_module = True,
             deps = deps,
         )
@@ -88,7 +82,6 @@ def ts_compile(name, srcs, deps, package = None, skip_esm = True, skip_esm_esnex
             declaration_map = True,
             out_dir = "lib_esnext",
             tsconfig = "//:tsconfig.esm.esnext",
-            extends = "//:tsconfig.json",
             resolve_json_module = True,
             deps = deps,
         )
@@ -136,11 +129,11 @@ def ts_script(name, entry_point, args = [], data = [], outs = [], output_dir = F
         srcs = data + [
             entry_point,
             "//:tsconfig.json",
-            "@npm//@types/fs-extra",
-            "@npm//@types/minimist",
-            "@npm//fs-extra",
-            "@npm//minimist",
-            "@npm//tslib",
+            "//:node_modules/@types/fs-extra",
+            "//:node_modules/@types/minimist",
+            "//:node_modules/fs-extra",
+            "//:node_modules/minimist",
+            "//:node_modules/tslib",
             "//:tsconfig.node.json",
         ],
         output_dir = output_dir,
@@ -198,10 +191,10 @@ def bundle_karma_tests(name, srcs, tests, data = [], deps = [], esbuild_deps = [
         resolve_json_module = True,
         tsconfig = "//:tsconfig.esm.json",
         deps = deps + [
-            "@npm//@jest/transform",
-            "@npm//ts-jest",
-            "@npm//@types/jest",
-            "@npm//tslib",
+            "//:node_modules/@jest/transform",
+            "//:node_modules/ts-jest",
+            "//:node_modules/@types/jest",
+            "//:node_modules/tslib",
         ],
     )
 
@@ -218,7 +211,7 @@ def bundle_karma_tests(name, srcs, tests, data = [], deps = [], esbuild_deps = [
             },
             deps = [
                 ":%s-compile" % name,
-                "@npm//tslib",
+                "//:node_modules/tslib",
             ] + deps + esbuild_deps,
         )
 
@@ -287,8 +280,8 @@ def check_format(name, srcs, config = "//:.prettierrc.json"):
     )
 
 def package_json_test(name, packageJson = "package.json", deps = []):
-    external_deps = [s.replace("@npm//", "") for s in deps if s.startswith("@npm//")]
-    internal_dep_package_jsons = ["%s:package.json" % s.split(":")[0] for s in deps if not s.startswith("@npm//")]
+    external_deps = [s.replace("//:node_modules/", "") for s in deps if s.startswith("//:node_modules/")]
+    internal_dep_package_jsons = ["%s:package.json" % s.split(":")[0] for s in deps if not s.startswith("//:node_modules/")]
     ts_node_bin.ts_node_test(
         name = name,
         args = [
@@ -306,16 +299,16 @@ def package_json_test(name, packageJson = "package.json", deps = []):
             "//tools:check-package-json.ts",
             "//:package.json",
             "//:tsconfig.json",
-            "@npm//@types/fs-extra",
-            "@npm//@types/minimist",
-            "@npm//fs-extra",
-            "@npm//json-stable-stringify",
-            "@npm//@types/json-stable-stringify",
-            "@npm//minimist",
-            "@npm//lodash",
-            "@npm//@types/lodash",
-            "@npm//unidiff",
-            "@npm//tslib",
+            "//:node_modules/@types/fs-extra",
+            "//:node_modules/@types/minimist",
+            "//:node_modules/fs-extra",
+            "//:node_modules/json-stable-stringify",
+            "//:node_modules/@types/json-stable-stringify",
+            "//:node_modules/minimist",
+            "//:node_modules/lodash",
+            "//:node_modules/@types/lodash",
+            "//:node_modules/unidiff",
+            "//:node_modules/tslib",
             "//:tsconfig.node.json",
         ],
     )

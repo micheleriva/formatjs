@@ -85,7 +85,7 @@ jest_test(
 # CLDR
 CLDR_DEPS = [
     ":cldr-raw",
-    "@npm//fast-glob",
+    "//:node_modules/fast-glob",
 ]
 
 ts_script(
@@ -93,10 +93,10 @@ ts_script(
     data = [
         "//packages/ecma402-abstract:dist",
         "//packages/ecma402-abstract:types",
-        "@npm//@types/serialize-javascript",
-        "@npm//cldr-core",
-        "@npm//make-plural-compiler",
-        "@npm//serialize-javascript",
+        "//:node_modules/@types/serialize-javascript",
+        "//:node_modules/cldr-core",
+        "//:node_modules/make-plural-compiler",
+        "//:node_modules/serialize-javascript",
     ],
     entry_point = "scripts/cldr-raw.ts",
     output_dir = True,
@@ -233,7 +233,7 @@ esbuild(
     target = "es5",
     deps = [
         ":dist-esm",
-        "@npm//tslib",
+        "//:node_modules/tslib",
     ] + SRC_DEPS,
 )
 

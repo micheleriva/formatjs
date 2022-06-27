@@ -64,7 +64,7 @@ generate_src_file(
     name = "aliases",
     src = "src/aliases.generated.ts",
     data = [
-        "@npm//cldr-core",
+        "//:node_modules/cldr-core",
     ],
     entry_point = "scripts/aliases.ts",
     visibility = ["//:__pkg__"],
@@ -74,7 +74,7 @@ generate_src_file(
     name = "likelySubtags",
     src = "src/likelySubtags.generated.ts",
     data = [
-        "@npm//cldr-core",
+        "//:node_modules/cldr-core",
     ],
     entry_point = "scripts/likely-subtags.ts",
     visibility = ["//:__pkg__"],
@@ -99,7 +99,7 @@ esbuild(
     target = "es5",
     deps = [
         ":dist-esm",
-        "@npm//tslib",
+        "//:node_modules/tslib",
     ] + SRC_DEPS,
 )
 

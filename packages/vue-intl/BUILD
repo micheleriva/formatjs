@@ -31,8 +31,8 @@ SRCS = glob([
 ])
 
 SRC_DEPS = [
-    "@npm//vue",
-    "@npm//@babel/types",
+    "//:node_modules/vue",
+    "//:node_modules/@babel/types",
     "//packages/intl:dist",
 ]
 
@@ -53,7 +53,7 @@ jest_test(
         "jsdom",
     ],
     deps = SRC_DEPS + [
-        "@npm//@vue/test-utils",
+        "//:node_modules/@vue/test-utils",
         "//packages/intl:types",
         "//packages/icu-messageformat-parser:types",
     ],

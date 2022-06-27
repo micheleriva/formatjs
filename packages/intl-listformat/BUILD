@@ -90,7 +90,7 @@ jest_test(
 # CLDR
 CLDR_DEPS = [
     ":cldr-raw",
-    "@npm//fast-glob",
+    "//:node_modules/fast-glob",
 ]
 
 ts_script(
@@ -99,11 +99,11 @@ ts_script(
         "scripts/extract-list.ts",
         "//packages/ecma402-abstract:dist",
         "//packages/ecma402-abstract:types",
-        "@npm//@types/lodash",
-        "@npm//cldr-core",
-        "@npm//cldr-misc-full",
-        "@npm//fast-glob",
-        "@npm//lodash",
+        "//:node_modules/@types/lodash",
+        "//:node_modules/cldr-core",
+        "//:node_modules/cldr-misc-full",
+        "//:node_modules/fast-glob",
+        "//:node_modules/lodash",
     ],
     entry_point = "scripts/cldr-raw.ts",
     output_dir = True,
@@ -241,7 +241,7 @@ esbuild(
     target = "es5",
     deps = [
         ":dist-esm",
-        "@npm//tslib",
+        "//:node_modules/tslib",
     ] + SRC_DEPS,
 )
 

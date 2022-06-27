@@ -48,6 +48,12 @@ ts_config(
     deps = ["//:tsconfig.json"],
 )
 
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+    visibility = ["//:__subpackages__"],
+)
+
 # We run this centrally so it doesn't spawn
 # multiple browser sessions which overwhelms SauceLabs
 KARMA_TESTS = [
@@ -68,10 +74,10 @@ karma_bin.karma_test(
     # ],
     data = [
         "//:karma.conf.js",
-        "@npm//karma-jasmine",
-        "@npm//karma-chrome-launcher",
-        "@npm//karma-sauce-launcher",
-        "@npm//karma-jasmine-matchers",
+        "//:node_modules/karma-jasmine",
+        "//:node_modules/karma-chrome-launcher",
+        "//:node_modules/karma-sauce-launcher",
+        "//:node_modules/karma-jasmine-matchers",
     ] + KARMA_TESTS,
     tags = ["manual"],
     args = [
@@ -91,10 +97,10 @@ karma_bin.karma_test(
     # ],
     data = [
         "//:karma.conf.js",
-        "@npm//karma-jasmine",
-        "@npm//karma-chrome-launcher",
-        "@npm//karma-sauce-launcher",
-        "@npm//karma-jasmine-matchers",
+        "//:node_modules/karma-jasmine",
+        "//:node_modules/karma-chrome-launcher",
+        "//:node_modules/karma-sauce-launcher",
+        "//:node_modules/karma-jasmine-matchers",
     ] + KARMA_TESTS,
     tags = ["manual"],
     args = [

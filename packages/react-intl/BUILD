@@ -34,10 +34,10 @@ alias(
 SRCS = glob(["src/**/*.ts*"]) + ["index.ts"]
 
 SRC_DEPS = [
-    "@npm//@types/hoist-non-react-statics",
-    "@npm//@types/react",
-    "@npm//hoist-non-react-statics",
-    "@npm//react",
+    "//:node_modules/@types/hoist-non-react-statics",
+    "//:node_modules/@types/react",
+    "//:node_modules/hoist-non-react-statics",
+    "//:node_modules/react",
     "//packages/ecma402-abstract:dist",
     "//packages/icu-messageformat-parser:dist",
     "//packages/intl-displaynames:dist",
@@ -52,11 +52,11 @@ TESTS = glob([
 ])
 
 TEST_DEPS = SRC_DEPS + [
-    "@npm//@testing-library/jest-dom",
-    "@npm//@testing-library/react",
-    "@npm//cjs-module-lexer",
-    "@npm//react-dom",
-    "@npm//typescript",
+    "//:node_modules/@testing-library/jest-dom",
+    "//:node_modules/@testing-library/react",
+    "//:node_modules/cjs-module-lexer",
+    "//:node_modules/react-dom",
+    "//:node_modules/typescript",
     "//packages/ecma402-abstract:types",
     "//packages/icu-messageformat-parser:types",
     "//packages/intl-displaynames:types",

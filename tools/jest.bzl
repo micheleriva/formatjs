@@ -28,10 +28,10 @@ def jest_test(name, srcs, deps, size = "medium", jest_config = "//:jest.config.j
         args.extend(["--runTestsByPath", "$(rootpath %s)" % src])
 
     data = [jest_config] + srcs + snapshots + deps + [
-        "@npm//@jest/transform",
-        "@npm//ts-jest",
-        "@npm//@types/jest",
-        "@npm//tslib",
+        "//:node_modules/@jest/transform",
+        "//:node_modules/ts-jest",
+        "//:node_modules/@types/jest",
+        "//:node_modules/tslib",
         "//:tsconfig.json",
         "//tools:jest-reporter.js",
     ]

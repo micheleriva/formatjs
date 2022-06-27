@@ -116,7 +116,7 @@ esbuild(
     target = "es5",
     deps = [
         ":dist-esm",
-        "@npm//tslib",
+        "//:node_modules/tslib",
     ] + SRC_DEPS,
 )
 

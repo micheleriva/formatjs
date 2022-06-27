@@ -33,13 +33,13 @@ load("//tools:index.bzl", "check_format")
 # SRCS = glob(["*.ts*"])
 
 # SRC_DEPS = [
-#     "@npm//@material-ui/core",
-#     "@npm//@material-ui/icons",
-#     "@npm//@material-ui/lab",
-#     "@npm//react",
-#     "@npm//@types/react",
-#     "@npm//react-dom",
-#     "@npm//@types/react-dom",
+#     "//:node_modules/@material-ui/core",
+#     "//:node_modules/@material-ui/icons",
+#     "//:node_modules/@material-ui/lab",
+#     "//:node_modules/react",
+#     "//:node_modules/@types/react",
+#     "//:node_modules/react-dom",
+#     "//:node_modules/@types/react-dom",
 #     "//packages/react-intl:dist",
 #     "//packages/icu-messageformat-parser:dist",
 # ]
@@ -63,8 +63,8 @@ load("//tools:index.bzl", "check_format")
 # #     deps = [
 # #         "//packages/icu-messageformat-parser:types",
 # #         "//packages/ts-transformer:types",
-# #         "@npm//rimraf",
-# #         "@npm//@types/rimraf",
+# #         "//:node_modules/rimraf",
+# #         "//:node_modules/@types/rimraf",
 # #     ] + SRC_DEPS,
 # # )
 

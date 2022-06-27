@@ -61,7 +61,7 @@ js_binary(
     name = "benchmark",
     data = [
         ":dist",
-        "@npm//benchmark",
+        "//:node_modules/benchmark",
         "benchmark.js",
     ] + SRC_DEPS,
     entry_point = "benchmark.js",
@@ -100,8 +100,8 @@ generate_src_file(
     src = "regex.generated.ts",
     data = [
         "scripts/global.ts",
-        "@npm//@unicode/unicode-13.0.0",
-        "@npm//regenerate",
+        "//:node_modules/@unicode/unicode-13.0.0",
+        "//:node_modules/regenerate",
     ],
     entry_point = "scripts/regex-gen.ts",
 )
@@ -110,7 +110,7 @@ generate_src_file(
     name = "time-data",
     src = "time-data.generated.ts",
     data = [
-        "@npm//cldr-core",
+        "//:node_modules/cldr-core",
     ],
     entry_point = "scripts/time-data-gen.ts",
 )

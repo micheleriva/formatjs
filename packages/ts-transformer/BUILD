@@ -34,11 +34,11 @@ SRCS = glob([
 ])
 
 SRC_DEPS = [
-    "@npm//@types/node",
-    "@npm//typescript",
-    "@npm//chalk",
-    "@npm//json-stable-stringify",
-    "@npm//@types/json-stable-stringify",
+    "//:node_modules/@types/node",
+    "//:node_modules/typescript",
+    "//:node_modules/chalk",
+    "//:node_modules/json-stable-stringify",
+    "//:node_modules/@types/json-stable-stringify",
     "//packages/icu-messageformat-parser:dist",
 ]
 
@@ -47,8 +47,8 @@ ts_compile(
     package = "@formatjs/%s" % PACKAGE_NAME,
     srcs = SRCS,
     deps = SRC_DEPS + [
-        "@npm//ts-jest",
-        "@npm//@jest/types",
+        "//:node_modules/ts-jest",
+        "//:node_modules/@jest/types",
     ],
 )
 
@@ -73,10 +73,10 @@ jest_test(
     deps = [
         ":dist",
         "//packages/icu-messageformat-parser:types",
-        "@npm//@types/react",
-        "@npm//@types/react-dom",
-        "@npm//react",
-        "@npm//react-dom",
+        "//:node_modules/@types/react",
+        "//:node_modules/@types/react-dom",
+        "//:node_modules/react",
+        "//:node_modules/react-dom",
     ],
 )
 
@@ -108,13 +108,13 @@ jest_test(
         ":dist",
         ":types",
         "//packages/icu-messageformat-parser:types",
-        "@npm//@types/node",
-        "@npm//@types/webpack",
-        "@npm//ts-loader",
-        "@npm//vue",
-        "@npm//vue-class-component",
-        "@npm//vue-loader",
-        "@npm//webpack",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/webpack",
+        "//:node_modules/ts-loader",
+        "//:node_modules/vue",
+        "//:node_modules/vue-class-component",
+        "//:node_modules/vue-loader",
+        "//:node_modules/webpack",
     ],
 )
 

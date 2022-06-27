@@ -28,12 +28,12 @@ DEPS = [
     "//packages/intl-messageformat:dist",
     "//packages/icu-messageformat-parser:dist",
     "//packages/react-intl:dist",
-    "@npm//@docusaurus/plugin-google-analytics",
-    "@npm//@docusaurus/preset-classic",
-    "@npm//@docusaurus/theme-live-codeblock",
-    "@npm//classnames",
-    "@npm//react",
-    "@npm//react-dom",
+    "//:node_modules/@docusaurus/plugin-google-analytics",
+    "//:node_modules/@docusaurus/preset-classic",
+    "//:node_modules/@docusaurus/theme-live-codeblock",
+    "//:node_modules/classnames",
+    "//:node_modules/react",
+    "//:node_modules/react-dom",
 ]
 
 copy_to_bin(

@@ -36,22 +36,22 @@ SRCS = glob(["src/**/*.ts"]) + [
 ]
 
 VUE_DEPS = [
-    "@npm//@vue/compiler-core",
-    "@npm//@vue/compiler-sfc",
+    "//:node_modules/@vue/compiler-core",
+    "//:node_modules/@vue/compiler-sfc",
 ]
 
 SRC_DEPS = [
-    "@npm//@types/estree",
-    "@npm//@types/fs-extra",
-    "@npm//@types/json-stable-stringify",
-    "@npm//@types/node",
-    "@npm//chalk",
-    "@npm//commander",
-    "@npm//fast-glob",
-    "@npm//fs-extra",
-    "@npm//json-stable-stringify",
-    "@npm//loud-rejection",
-    "@npm//typescript",
+    "//:node_modules/@types/estree",
+    "//:node_modules/@types/fs-extra",
+    "//:node_modules/@types/json-stable-stringify",
+    "//:node_modules/@types/node",
+    "//:node_modules/chalk",
+    "//:node_modules/commander",
+    "//:node_modules/fast-glob",
+    "//:node_modules/fs-extra",
+    "//:node_modules/json-stable-stringify",
+    "//:node_modules/loud-rejection",
+    "//:node_modules/typescript",
     "//packages/icu-messageformat-parser:dist",
     "//packages/ts-transformer:dist",
 ] + VUE_DEPS
@@ -72,8 +72,8 @@ jest_test(
     deps = [
         "//packages/icu-messageformat-parser:types",
         "//packages/ts-transformer:types",
-        "@npm//rimraf",
-        "@npm//@types/rimraf",
+        "//:node_modules/rimraf",
+        "//:node_modules/@types/rimraf",
     ] + SRC_DEPS,
 )
 
@@ -93,8 +93,8 @@ jest_test(
         ":dist",
         "//packages/icu-messageformat-parser:types",
         "//packages/ts-transformer:types",
-        "@npm//@types/rimraf",
-        "@npm//rimraf",
+        "//:node_modules/@types/rimraf",
+        "//:node_modules/rimraf",
     ],
 )
 
@@ -112,10 +112,10 @@ jest_test(
     deps = [
         "//packages/icu-messageformat-parser:types",
         "//packages/ts-transformer:types",
-        "@npm//@types/fs-extra",
-        "@npm//@types/rimraf",
-        "@npm//fs-extra",
-        "@npm//rimraf",
+        "//:node_modules/@types/fs-extra",
+        "//:node_modules/@types/rimraf",
+        "//:node_modules/fs-extra",
+        "//:node_modules/rimraf",
     ],
 )
 
@@ -134,10 +134,10 @@ jest_test(
     deps = [
         "//packages/icu-messageformat-parser:types",
         "//packages/ts-transformer:types",
-        "@npm//@types/fs-extra",
-        "@npm//@types/rimraf",
-        "@npm//fs-extra",
-        "@npm//rimraf",
+        "//:node_modules/@types/fs-extra",
+        "//:node_modules/@types/rimraf",
+        "//:node_modules/fs-extra",
+        "//:node_modules/rimraf",
     ],
 )
 
@@ -197,6 +197,6 @@ esbuild(
     platform = "node",
     target = "node16",
     deps = [
-        "@npm//tslib",
+        "//:node_modules/tslib",
     ] + SRC_DEPS,
 )

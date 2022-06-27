@@ -34,11 +34,11 @@ SRCS = glob(["rules/*.ts"]) + [
 ]
 
 SRC_DEPS = [
-    "@npm//@types/eslint",
-    "@npm//@typescript-eslint/typescript-estree",
-    "@npm//emoji-regex",
-    "@npm//eslint",
-    "@npm//typescript",
+    "//:node_modules/@types/eslint",
+    "//:node_modules/@typescript-eslint/typescript-estree",
+    "//:node_modules/emoji-regex",
+    "//:node_modules/eslint",
+    "//:node_modules/typescript",
     "//packages/icu-messageformat-parser:dist",
     "//packages/ts-transformer:dist",
 ]
@@ -65,8 +65,8 @@ TEST_FILES = glob([
     name = "unit-%s" % f[6:f.index(".test.ts")],
     srcs = TESTS_BASE_SRCS + [f],
     deps = [
-        "@npm//@typescript-eslint/parser",
-        "@npm//vue-eslint-parser",
+        "//:node_modules/@typescript-eslint/parser",
+        "//:node_modules/vue-eslint-parser",
         "//packages/icu-messageformat-parser:types",
         "//packages/ts-transformer:types",
     ] + SRC_DEPS,

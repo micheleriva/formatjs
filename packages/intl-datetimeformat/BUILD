@@ -112,7 +112,7 @@ filegroup(
 # CLDR
 CLDR_DEPS = [
     ":cldr-raw",
-    "@npm//fast-glob",
+    "//:node_modules/fast-glob",
 ]
 
 ts_script(
@@ -125,10 +125,10 @@ ts_script(
         "//packages/ecma402-abstract:types",
         "//packages/intl-locale:dist",
         "//packages/intl-locale:types",
-        "@npm//cldr-core",
-        "@npm//cldr-dates-full",
-        "@npm//cldr-numbers-full",
-        "@npm//fast-glob",
+        "//:node_modules/cldr-core",
+        "//:node_modules/cldr-dates-full",
+        "//:node_modules/cldr-numbers-full",
+        "//:node_modules/fast-glob",
     ],
     entry_point = "scripts/cldr-raw.ts",
     output_dir = True,
@@ -229,8 +229,8 @@ generate_src_file(
         ":zdumps",
         "//packages/ecma402-abstract:dist",
         "//packages/ecma402-abstract:types",
-        "@npm//@types/json-stable-stringify",
-        "@npm//json-stable-stringify",
+        "//:node_modules/@types/json-stable-stringify",
+        "//:node_modules/json-stable-stringify",
     ],
     entry_point = "scripts/process-zdump.ts",
 )
@@ -250,8 +250,8 @@ ts_script(
         ":zdumps",
         "//packages/ecma402-abstract:dist",
         "//packages/ecma402-abstract:types",
-        "@npm//@types/json-stable-stringify",
-        "@npm//json-stable-stringify",
+        "//:node_modules/@types/json-stable-stringify",
+        "//:node_modules/json-stable-stringify",
     ],
     entry_point = "scripts/process-zdump.ts",
     visibility = [
@@ -275,8 +275,8 @@ ts_script(
         ":zdumps",
         "//packages/ecma402-abstract:dist",
         "//packages/ecma402-abstract:types",
-        "@npm//@types/json-stable-stringify",
-        "@npm//json-stable-stringify",
+        "//:node_modules/@types/json-stable-stringify",
+        "//:node_modules/json-stable-stringify",
     ],
     entry_point = "scripts/process-zdump.ts",
 )
@@ -304,7 +304,7 @@ esbuild(
     target = "es5",
     deps = [
         ":dist-esm",
-        "@npm//tslib",
+        "//:node_modules/tslib",
     ] + SRC_DEPS,
 )
 
@@ -335,7 +335,7 @@ ts_node_bin.ts_node(
         "tests/benchmark.ts",
         "tests/locale-data/en.json",
         "//:tsconfig.json",
-        "@npm//tslib",
+        "//:node_modules/tslib",
         "//:tsconfig.node.json",
     ],
 )

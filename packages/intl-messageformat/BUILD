@@ -45,7 +45,7 @@ TESTS = glob([
 ])
 
 TEST_DEPS = SRC_DEPS + [
-    "@npm//jasmine-expect",
+    "//:node_modules/jasmine-expect",
 ]
 
 ts_compile(
@@ -118,7 +118,7 @@ ts_node_bin.ts_node(
     srcs = SRCS + SRC_DEPS + [
         "tests/benchmark.ts",
         "//:tsconfig.json",
-        "@npm//tslib",
+        "//:node_modules/tslib",
         "//packages/intl-pluralrules",
         "//packages/intl-pluralrules:locale-data",
         "//:tsconfig.node.json",

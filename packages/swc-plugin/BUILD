@@ -33,10 +33,10 @@ SRCS = glob([
 ])
 
 SRC_DEPS = [
-    "@npm//@types/node",
-    "@npm//chalk",
-    "@npm//json-stable-stringify",
-    "@npm//@types/json-stable-stringify",
+    "//:node_modules/@types/node",
+    "//:node_modules/chalk",
+    "//:node_modules/json-stable-stringify",
+    "//:node_modules/@types/json-stable-stringify",
     "//packages/icu-messageformat-parser:dist",
     "//packages/ts-transformer:dist",
 ]
@@ -46,8 +46,8 @@ ts_compile(
     package = "@formatjs/%s" % PACKAGE_NAME,
     srcs = SRCS,
     deps = SRC_DEPS + [
-        "@npm//ts-jest",
-        "@npm//@jest/types",
+        "//:node_modules/ts-jest",
+        "//:node_modules/@jest/types",
     ],
 )
 

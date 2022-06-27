@@ -14,11 +14,11 @@ SRC_DEPS = [
     "//packages/intl-numberformat:dist",
     "//packages/intl-pluralrules:dist",
     "//packages/react-intl:dist",
-    "@npm//core-js",
-    "@npm//@types/react",
-    "@npm//@types/react-dom",
-    "@npm//react",
-    "@npm//react-dom",
+    "//:node_modules/core-js",
+    "//:node_modules/@types/react",
+    "//:node_modules/@types/react-dom",
+    "//:node_modules/react",
+    "//:node_modules/react-dom",
 ]
 
 ts_project(

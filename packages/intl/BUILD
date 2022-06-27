@@ -72,7 +72,7 @@ jest_test(
         "//packages/intl-messageformat:types",
         "//packages/intl-numberformat:dist",
         "//packages/intl-numberformat:types",
-        "@npm//@types/node",
+        "//:node_modules/@types/node",
     ],
 )
 

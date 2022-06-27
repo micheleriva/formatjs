@@ -36,13 +36,13 @@ SRCS = glob(
 SRC_DEPS = [
     "//packages/icu-messageformat-parser:dist",
     "//packages/ts-transformer:dist",
-    "@npm//@babel/helper-plugin-utils",
-    "@npm//@babel/core",
-    "@npm//@babel/types",
-    "@npm//@types/babel__core",
-    "@npm//@types/babel__helper-plugin-utils",
-    "@npm//@babel/plugin-syntax-jsx",
-    "@npm//@babel/traverse",
+    "//:node_modules/@babel/helper-plugin-utils",
+    "//:node_modules/@babel/core",
+    "//:node_modules/@babel/types",
+    "//:node_modules/@types/babel__core",
+    "//:node_modules/@types/babel__helper-plugin-utils",
+    "//:node_modules/@babel/plugin-syntax-jsx",
+    "//:node_modules/@babel/traverse",
 ]
 
 ts_compile(
@@ -69,8 +69,8 @@ jest_test(
     deps = [
         "//packages/icu-messageformat-parser:types",
         "//packages/ts-transformer:types",
-        "@npm//@babel/preset-env",
-        "@npm//@babel/preset-react",
+        "//:node_modules/@babel/preset-env",
+        "//:node_modules/@babel/preset-react",
     ] + SRC_DEPS,
 )
 
@@ -84,12 +84,12 @@ jest_test(
         ":dist",
         ":types",
         "//packages/icu-messageformat-parser:types",
-        "@npm//@types/node",
-        "@npm//@types/webpack",
-        "@npm//babel-loader",
-        "@npm//vue",
-        "@npm//vue-loader",
-        "@npm//webpack",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/webpack",
+        "//:node_modules/babel-loader",
+        "//:node_modules/vue",
+        "//:node_modules/vue-loader",
+        "//:node_modules/webpack",
     ],
 )
 
